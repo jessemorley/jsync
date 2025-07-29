@@ -33,8 +33,12 @@ echo "   Output: Contents/Resources/Scripts/main.scpt"
 if [ "$1" == "--bundle" ]; then
     echo "📦 Creating script bundle..."
     rm -rf "JSYNC Backup.scptd"
-    mkdir -p "JSYNC Backup.scptd"
-    cp -R Contents/ "JSYNC Backup.scptd/"
+    mkdir -p "JSYNC Backup.scptd/Contents/Resources/Scripts"
+    
+    # Copy only necessary files
+    cp Contents/Info.plist "JSYNC Backup.scptd/Contents/"
+    cp Contents/Resources/Scripts/main.scpt "JSYNC Backup.scptd/Contents/Resources/Scripts/"
+    
     chmod +x "JSYNC Backup.scptd/Contents/Resources/Scripts/main.scpt"
     echo "✅ Script bundle created: JSYNC Backup.scptd"
     echo "   Double-click to install in Capture One"

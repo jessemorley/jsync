@@ -41,13 +41,16 @@ jobs:
           VERSION=${GITHUB_REF#refs/tags/v}
           
           # Create the script bundle structure
-          mkdir -p "JSYNC Backup.scptd"
-          cp -R Contents/ "JSYNC Backup.scptd/"
+          mkdir -p "JSYNC Backup.scptd/Contents/Resources/Scripts"
+          
+          # Copy only the necessary files
+          cp Contents/Info.plist "JSYNC Backup.scptd/Contents/"
+          cp Contents/Resources/Scripts/main.scpt "JSYNC Backup.scptd/Contents/Resources/Scripts/"
           
           # Set executable permissions
           chmod +x "JSYNC Backup.scptd/Contents/Resources/Scripts/main.scpt"
           
-          # Create ZIP archive with the script bundle
+          # Create ZIP archive with ONLY the script bundle
           zip -r "JSYNC-Backup-v$VERSION.zip" "JSYNC Backup.scptd"
           
       - name: Generate release notes
