@@ -1,0 +1,102 @@
+name: Build and Release JSYNC Backup
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Compile AppleScript
+        run: |
+          echo "Compiling main.applescript to main.scpt..."
+          osacompile -o "Contents/Resources/Scripts/main.scpt" "src/main.applescript"
+          
+          # Verify compilation was successful
+          if [ ! -f "Contents/Resources/Scripts/main.scpt" ]; then
+            echo "Error: Compilation failed"
+            exit 1
+          fi
+          
+          echo "Compilation successful"
+          
+      - name: Update version in Info.plist
+        run: |
+          # Extract version from tag (remove 'v' prefix)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "Setting version to: $VERSION"
+          
+          # Update version in Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" Contents/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $VERSION" Contents/Info.plist
+          
+      - name: Create app bundle
+        run: |
+          # Create the .app bundle structure
+          mkdir -p "JSYNC Backup.app"
+          cp -R Contents/ "JSYNC Backup.app/"
+          
+          # Set executable permissions (important for macOS apps)
+          chmod +x "JSYNC Backup.app/Contents/Resources/Scripts/main.scpt"
+          
+      - name: Create release archive
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          
+          # Create ZIP archive
+          zip -r "JSYNC-Backup-v$VERSION.zip" "JSYNC Backup.app"
+          
+          # Create DMG for more professional distribution (optional)
+          # hdiutil create -format UDZO -srcfolder "JSYNC Backup.app" "JSYNC-Backup-v$VERSION.dmg"
+          
+      - name: Generate release notes
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          cat > release_notes.md << EOF
+          # JSYNC Backup $VERSION
+          
+          ## Installation
+          1. Download and unzip the archive
+          2. Move "JSYNC Backup.app" to your Applications folder
+          3. Right-click and select "Open" on first launch (macOS security)
+          
+          ## What's New
+          - Improved backup progress notifications
+          - Real-time file transfer status
+          - Enhanced error handling
+          
+          ## Requirements
+          - macOS 10.14 or later  
+          - Capture One (any recent version)
+          
+          ## Usage
+          - Launch the app while Capture One is open with a session
+          - Choose backup location or use previously saved location
+          - Monitor progress via system notifications
+          EOF
+          
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            JSYNC-Backup-v*.zip
+          body_path: release_notes.md
+          name: "JSYNC Backup ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: jsync-backup-build
+          path: |
+            JSYNC Backup.app/
+            JSYNC-Backup-v*.zip

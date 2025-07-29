@@ -1,0 +1,26 @@
+# Compiled AppleScript files
+*.scpt
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# App bundles (generated during build)
+*.app/
+
+# Build artifacts
+*.zip
+*.dmg
+
+# Temporary files
+rsync_output*.txt
+*_temp*
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+
+# Local development
+local_test/
