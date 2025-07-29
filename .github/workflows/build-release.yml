@@ -5,6 +5,10 @@ on:
     tags: ['v*']
   workflow_dispatch:  # Allow manual trigger for testing
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   build-and-release:
     runs-on: macos-14
@@ -90,7 +94,7 @@ jobs:
           EOF
           
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             JSYNC-Backup-v*.zip
@@ -98,8 +102,7 @@ jobs:
           name: "JSYNC Backup ${{ github.ref_name }}"
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
