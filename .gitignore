@@ -8,6 +8,7 @@
 
 # App bundles (generated during build)
 *.app/
+*.scptd/
 
 # Build artifacts
 *.zip

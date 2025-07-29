@@ -15,20 +15,23 @@ A macOS AppleScript application that automates rsync backups for Capture One pho
 ### Download Release (Recommended)
 1. Go to [Releases](https://github.com/jessemorley/jsync/releases)
 2. Download the latest `JSYNC-Backup-vX.X.X.zip`
-3. Unzip and move `JSYNC Backup.app` to your Applications folder
-4. Right-click the app and select "Open" on first launch (macOS security requirement)
+3. Unzip the archive
+4. **Double-click `JSYNC Backup.scptd`** to install in Capture One
+5. The script will appear in Capture One's **Scripts** menu
+
+**That's it!** No security warnings, no app permissions needed - it runs directly within Capture One.
 
 ### Build from Source
 ```bash
 git clone https://github.com/jessemorley/jsync.git
 cd jsync
-./build.sh --app
+./build.sh --bundle
 ```
 
 ## Usage
 
 1. **Open Capture One** with a session loaded
-2. **Launch JSYNC Backup** from Applications
+2. **Go to Scripts menu** → **JSYNC Backup**
 3. **Choose action:**
    - **Run Backup**: Use saved location or select new one
    - **Choose Location**: Browse for backup destination
@@ -67,8 +70,8 @@ jsync/
 # Compile only
 ./build.sh
 
-# Compile and create app bundle for testing
-./build.sh --app
+# Compile and create script bundle for testing
+./build.sh --bundle
 ```
 
 ### Creating Releases

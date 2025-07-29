@@ -29,14 +29,15 @@ echo "✅ Build complete!"
 echo "   Source: src/main.applescript"
 echo "   Output: Contents/Resources/Scripts/main.scpt"
 
-# Optional: Create app bundle for testing
-if [ "$1" == "--app" ]; then
-    echo "📱 Creating app bundle..."
-    rm -rf "JSYNC Backup.app"
-    mkdir -p "JSYNC Backup.app"
-    cp -R Contents/ "JSYNC Backup.app/"
-    chmod +x "JSYNC Backup.app/Contents/Resources/Scripts/main.scpt"
-    echo "✅ App bundle created: JSYNC Backup.app"
+# Optional: Create script bundle for testing
+if [ "$1" == "--bundle" ]; then
+    echo "📦 Creating script bundle..."
+    rm -rf "JSYNC Backup.scptd"
+    mkdir -p "JSYNC Backup.scptd"
+    cp -R Contents/ "JSYNC Backup.scptd/"
+    chmod +x "JSYNC Backup.scptd/Contents/Resources/Scripts/main.scpt"
+    echo "✅ Script bundle created: JSYNC Backup.scptd"
+    echo "   Double-click to install in Capture One"
 fi
 
 echo "🚀 Ready for commit and push!"
