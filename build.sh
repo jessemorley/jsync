@@ -39,9 +39,15 @@ if [ "$1" == "--bundle" ]; then
     cp Contents/Info.plist "JSYNC Backup.scptd/Contents/"
     cp Contents/Resources/Scripts/main.scpt "JSYNC Backup.scptd/Contents/Resources/Scripts/"
     
+    # Copy icon file if it exists
+    if [ -f "Contents/Resources/jsync.icns" ]; then
+        cp Contents/Resources/jsync.icns "JSYNC Backup.scptd/Contents/Resources/"
+        echo "   Icon: jsync.icns included"
+    fi
+    
     chmod +x "JSYNC Backup.scptd/Contents/Resources/Scripts/main.scpt"
     echo "✅ Script bundle created: JSYNC Backup.scptd"
-    echo "   Double-click to install in Capture One"
+    echo "   Move to ~/Library/Scripts/Capture One Scripts/ to install"
 fi
 
 echo "🚀 Ready for commit and push!"

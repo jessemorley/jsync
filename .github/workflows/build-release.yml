@@ -59,6 +59,11 @@ jobs:
           cp Contents/Info.plist "JSYNC Backup.scptd/Contents/"
           cp Contents/Resources/Scripts/main.scpt "JSYNC Backup.scptd/Contents/Resources/Scripts/"
           
+          # Copy icon file if it exists
+          if [ -f "Contents/Resources/jsync.icns" ]; then
+            cp Contents/Resources/jsync.icns "JSYNC Backup.scptd/Contents/Resources/"
+          fi
+          
           # Set executable permissions
           chmod +x "JSYNC Backup.scptd/Contents/Resources/Scripts/main.scpt"
           
@@ -71,7 +76,7 @@ jobs:
           cat > release_notes.md << 'EOF'
           ## Installation
           1. Download and unzip the ZIP file
-          2. Double-click `JSYNC Backup.scptd` to install it in Capture One
+          2. Move `JSYNC Backup.scptd` to `~/Library/Scripts/Capture One Scripts/`
           3. The script will appear in Capture One's Scripts menu
           
           ## What's New
