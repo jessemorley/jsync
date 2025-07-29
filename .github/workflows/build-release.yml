@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: macos-latest
+    runs-on: macos-14
     
     steps:
       - name: Checkout code
@@ -16,11 +16,19 @@ jobs:
       - name: Compile AppleScript
         run: |
           echo "Compiling main.applescript to main.scpt..."
-          osacompile -o "Contents/Resources/Scripts/main.scpt" "src/main.applescript"
+          
+          # Ensure directories exist
+          mkdir -p "Contents/Resources/Scripts"
+          
+          # Compile with error checking
+          if ! osacompile -o "Contents/Resources/Scripts/main.scpt" "src/main.applescript"; then
+            echo "Error: AppleScript compilation failed"
+            exit 1
+          fi
           
           # Verify compilation was successful
           if [ ! -f "Contents/Resources/Scripts/main.scpt" ]; then
-            echo "Error: Compilation failed"
+            echo "Error: Compiled script not found"
             exit 1
           fi
           
@@ -56,12 +64,10 @@ jobs:
       - name: Generate release notes
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
-          cat > release_notes.md << EOF
-          # JSYNC Backup $VERSION
-          
+          cat > release_notes.md << 'EOF'
           ## Installation
-          1. Download and unzip \`JSYNC-Backup-v$VERSION.zip\`
-          2. Double-click \`JSYNC Backup.scptd\` to install it in Capture One
+          1. Download and unzip the ZIP file
+          2. Double-click `JSYNC Backup.scptd` to install it in Capture One
           3. The script will appear in Capture One's Scripts menu
           
           ## What's New
@@ -76,7 +82,7 @@ jobs:
           
           ## Usage
           1. Open Capture One with a session loaded
-          2. Go to **Scripts** menu → **JSYNC Backup**
+          2. Go to Scripts menu → JSYNC Backup
           3. Choose backup location or use previously saved location
           4. Monitor progress via system notifications
           
