@@ -1,5 +1,5 @@
 (*
-    JSYNC Backup Tool v1.2.7
+    JSYNC Backup Tool v1.3.1
     Created by: Jesse Morley
     Last updated: 16 October 2025
     
