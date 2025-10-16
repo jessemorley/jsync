@@ -1,4 +1,4 @@
-# <img src="images/jsync_256.png" width="35" height="35" alt-"JSYNC Logo"> JSYNC Backup
+# <img src="images/jsync_256.png" width="35" height="35" alt-"JSYNC Logo"/> JSYNC Backup
 
 A macOS AppleScript application that automates rsync backups for Capture One sessions.
 
