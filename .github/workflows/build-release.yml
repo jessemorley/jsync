@@ -67,6 +67,9 @@ jobs:
           # Set executable permissions
           chmod +x "JSYNC Backup.scptd/Contents/Resources/Scripts/main.scpt"
           
+          # Remove quarantine attributes to prevent macOS security issues
+          xattr -dr com.apple.quarantine "JSYNC Backup.scptd" 2>/dev/null || true
+          
           # Create ZIP archive with ONLY the script bundle
           zip -r "JSYNC-Backup-v$VERSION.zip" "JSYNC Backup.scptd"
           
@@ -78,6 +81,11 @@ jobs:
           1. Download and unzip the ZIP file
           2. Move `JSYNC Backup.scptd` to `~/Library/Scripts/Capture One Scripts/`
           3. The script will appear in Capture One's Scripts menu
+          
+          ## Troubleshooting
+          If you get security warnings or the script doesn't work:
+          1. Right-click the downloaded ZIP file → "Open With" → "Archive Utility"
+          2. Or run: `xattr -dr com.apple.quarantine "JSYNC Backup.scptd"`
           
           ## What's New
           - Real-time backup progress notifications
