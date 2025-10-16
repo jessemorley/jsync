@@ -1,7 +1,7 @@
 (*
-    JSYNC Backup Tool v1.1.5
+    JSYNC Backup Tool v1.2.7
     Created by: Jesse Morley
-    Last updated: 21 October 2024
+    Last updated: 16 October 2025
     
     Description: 
     Automates the rsync backup process for the active Capture One session. 
@@ -99,11 +99,11 @@ on formatFileSize(fileSizeInBytes)
 		return "Unknown size"
 	end try
 	
-	if fileSizeInBytes â‰¥ 1.0E+9 then
+	if fileSizeInBytes ³ 1.0E+9 then
 		set formattedSize to (fileSizeInBytes / 1.0E+9)
 		set formattedSize to (round (formattedSize * 100)) / 100.0
 		return formattedSize & " GB"
-	else if fileSizeInBytes â‰¥ 1000000 then
+	else if fileSizeInBytes ³ 1000000 then
 		set formattedSize to round (fileSizeInBytes / 1000000) rounding to nearest
 		return formattedSize & " MB"
 	else
@@ -116,7 +116,7 @@ end formatFileSize
 on performBackupWithProgress(sessionFolder, destinationFolder, tempFile)
 	
 	-- Step 1: Pre-scan to estimate total files
-	display notification "Scanning files..." with title "JSYNC Backup" subtitle "Preparing backup..."
+	display notification "Checking existing files..." with title "Starting Backup"
 	
 	set estimateCommand to "find " & quoted form of sessionFolder & " -type f | wc -l"
 	set totalFiles to 0
@@ -131,6 +131,16 @@ on performBackupWithProgress(sessionFolder, destinationFolder, tempFile)
 	
 	try
 		do shell script rsyncCommand
+		
+		-- Check if rsync will process changes by looking for specific patterns
+		delay 1 -- Give rsync a moment to start writing output
+		try
+			set rsyncContent to do shell script "cat " & quoted form of tempFile & " 2>/dev/null || echo ''"
+			if rsyncContent contains "building file list" or rsyncContent contains "sending incremental file list" or rsyncContent contains "to-check=" then
+				display notification "Backing up changes..." with title "Syncing Files"
+			end if
+		end try
+		
 	on error errMsg number errNum
 		-- Check if the error is due to "No space left on device"
 		if errNum is 28 or errMsg contains "No space left on device" then
@@ -166,11 +176,12 @@ on performBackupWithProgress(sessionFolder, destinationFolder, tempFile)
 		set transferRate to item 3 of currentProgress
 		set progressPercent to item 4 of currentProgress
 		
+		
 		-- Send notification every 10 seconds or on significant progress
 		set currentTime to current date
 		set timeSinceLastNotification to (currentTime - lastNotificationTime)
 		
-		if timeSinceLastNotification >= 10 or progressPercent mod 25 = 0 then
+		if timeSinceLastNotification ³ 10 or progressPercent mod 25 = 0 then
 			set progressMessage to "Progress: " & progressPercent & "%"
 			if totalFiles > 0 then
 				set progressMessage to progressMessage & " (" & filesProcessed & " of " & totalFiles & " files)"
@@ -182,7 +193,7 @@ on performBackupWithProgress(sessionFolder, destinationFolder, tempFile)
 			end if
 			if currentFile is not "" then
 				if subtitleMessage is not "" then
-					set subtitleMessage to subtitleMessage & " â€¢ " & currentFile
+					set subtitleMessage to subtitleMessage & " ¥ " & currentFile
 				else
 					set subtitleMessage to currentFile
 				end if
@@ -206,14 +217,12 @@ on performBackupWithProgress(sessionFolder, destinationFolder, tempFile)
 	
 	-- Final success notification
 	if numFilesTransferred = "0" then
-		set finalMessage to "Backup complete - No new files"
-		set finalSubtitle to "Total backup size: " & formattedTotalSize
+		set finalMessage to "No changes detected" & return & "Total backup size " & formattedTotalSize
 	else
-		set finalMessage to "Backup complete - " & numFilesTransferred & " files copied"
-		set finalSubtitle to "Transferred: " & formattedTransferSize & " â€¢ Total: " & formattedTotalSize
+		set finalMessage to numFilesTransferred & " files copied (" & formattedTransferSize & ")" & return & "Total backup size " & formattedTotalSize
 	end if
 	
-	display notification finalMessage with title "JSYNC Backup" subtitle finalSubtitle sound name "Glass"
+	display notification finalMessage with title "Backup Complete" sound name "Glass"
 	
 	return true
 	
