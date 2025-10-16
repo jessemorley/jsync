@@ -11,7 +11,7 @@
 	<key>CFBundleVersion</key>
 	<string>1.2.1</string>
 	<key>CFBundleIconFile</key>
-	<string>jsync</string>
+	<string>jsync.icns</string>
 	<key>WindowState</key>
 	<dict>
 		<key>bundleDividerCollapsed</key>

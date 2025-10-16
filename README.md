@@ -1,14 +1,14 @@
 # JSYNC Backup
 
-A macOS AppleScript application that automates rsync backups for Capture One sessions with real-time progress notifications.
+A macOS AppleScript application that automates rsync backups for Capture One sessions.
 
 ## Features
 
-- 🔄 **Automated Backups**: Syncs the active Capture One session folder using rsync
-- 📊 **Progress Tracking**: Real-time notifications showing file counts, transfer speeds, and current files
-- 💾 **Location Memory**: Remembers previously used backup destinations
-- 🚨 **Error Handling**: Handles disk space issues and other backup errors gracefully
-- 🎯 **Session Detection**: Automatically detects the current Capture One session folder
+- Automated rsync backups of active Capture One sessions
+- Real-time progress notifications with file counts and transfer speeds
+- Remembers backup locations for convenience
+- Handles errors like disk space issues gracefully
+- Automatically detects the current Capture One session folder
 
 ## Installation
 
@@ -21,14 +21,14 @@ A macOS AppleScript application that automates rsync backups for Capture One ses
 
 ## Usage
 
-1. **Open Capture One** with a session loaded
-2. **Go to Scripts menu** → **JSYNC Backup**
-3. **Choose action:**
-   - **Run Backup**: Use saved location or select new one
-   - **Choose Location**: Browse for backup destination
-   - **Cancel**: Exit without backing up
-4. **Monitor progress** via system notifications
-5. **Completion notification** shows transfer summary
+1. Open Capture One with a session loaded
+2. Go to Scripts menu → JSYNC Backup
+3. Choose an action:
+   - Run Backup: Use saved location or select new one
+   - Choose Location: Browse for backup destination
+   - Cancel: Exit without backing up
+4. Monitor progress via system notifications
+5. Completion notification shows transfer summary
 
 ## Requirements
 
@@ -36,26 +36,18 @@ A macOS AppleScript application that automates rsync backups for Capture One ses
 - Capture One (any recent version)
 - rsync (included with macOS)
 
-## Backup Process
+## How it works
 
-1. **Session Detection**: Communicates with Capture One to get active session path
-2. **File Scanning**: Counts total files for progress calculation
-3. **Background Sync**: Runs rsync with progress monitoring
-4. **Progress Updates**: Shows notifications with current status
-5. **Completion**: Final summary with transfer statistics
+1. Detects the active Capture One session folder
+2. Scans files to estimate total count for progress tracking
+3. Runs rsync in the background with progress monitoring
+4. Shows periodic notifications with current status
+5. Displays final summary with transfer statistics
 
-## Storage Locations
+## File locations
 
-- **Backup preferences**: `~/Library/Application Support/CaptureOneBackup/`
-- **Temp files**: Desktop (automatically cleaned up)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Edit `src/main.applescript`
-4. Test with `./build.sh --app`
-5. Submit a pull request
+- Backup preferences: `~/Library/Application Support/CaptureOneBackup/`
+- Temporary files: System temp directory (automatically cleaned up)
 
 ## License
 
