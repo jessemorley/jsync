@@ -63,6 +63,13 @@ Copyright © 2024 Jesse Morley. All rights reserved.
 
 ## Changelog
 
+### v1.3
+- Improved backup completion notifications with cleaner formatting
+- Added "Backing up changes..." notification when changes are detected
+- Changed completion notification title to "Backup Complete"
+- Moved temporary log files from desktop to system temp directory
+- Enhanced notification flow for better user experience
+
 ### v1.2.2
 - Cleaned up notification content
 

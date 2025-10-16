@@ -76,8 +76,8 @@ end if
 
 -- Perform the rsync backup if "Run Backup" was selected
 if userChoice is "Run Backup" then
-	-- Set the temp file path to Desktop for easy access during debugging
-	set tempFile to POSIX path of (path to desktop folder) & "rsync_output_clean.txt"
+	-- Set the temp file path to system temp directory
+	set tempFile to do shell script "mktemp /tmp/jsync_backup_XXXXXX"
 	
 	-- Run backup with progress notifications
 	set backupSuccess to performBackupWithProgress(sessionFolder, destinationFolder, tempFile)
